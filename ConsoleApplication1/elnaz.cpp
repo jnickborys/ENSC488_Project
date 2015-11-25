@@ -28,32 +28,30 @@ GLUquadric *quad;
 //Using two Longer Cubes and a Joint to Show a full Arm
 void drawarm ()
 {
-	glPushMatrix ();
-		glScalef( 0.4,1.4,0.4);
-		drawcube(); //Scaled Cube in Y direction to make a Cuboid for the Upper Arm
+	glPushMatrix();
 
-		glPushMatrix ();
-		glColor3f(1.0,1.0,0.0);
-		glTranslatef (0.2,-0.15,-0.9);
-		glScalef( 0.4,(1.0f/10.0),0.4);
-			glutSolidSphere (1.3,50,50);; //Smaller Cube to Draw Joint between Upper Arm and Lower Arm Relative to the Upper Arm
-			glPushMatrix ();
-			glTranslatef (-1.5,-8.3,1.2);
-			glScalef( 2.4,7,2.4);
-			//drawcube(); //Scaled Cube in Y direction to make a Cuboid for the Lower Arm Relative to the Joint
-				glPushMatrix ();
-				glTranslatef (0.3,-0.08,-0.3);
-				glScalef( 0.4,(1.0f/10.0),0.4);
-				//drawcube();
-						glPushMatrix ();
-						glTranslatef (-0.8,-7.2,0.5);
-						glScalef( 2.4,7,2.4);
-						//drawcube();
-		glPopMatrix ();
-		glPopMatrix ();
-		glPopMatrix ();
-		glPopMatrix ();
-		glPopMatrix ();
+	glPushMatrix();
+		glColor3f(1,0.5,0.5);
+		glTranslatef (0,-14.0,0);
+		glutSolidSphere (1,50,50); 
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef (0,-13,0.0);
+		glColor3f(0.5,1,0.5);
+		glScalef(1.6,12,1.6);
+		glutSolidCube(1);
+	glPopMatrix ();
+
+	glPushMatrix();
+		glColor3f(1,0.5,0.5);
+		glTranslatef (0,1,0);
+		glutSolidSphere (1,50,50); 
+	glPopMatrix ();
+
+
+	glPopMatrix ();
+
 	
 }
 
