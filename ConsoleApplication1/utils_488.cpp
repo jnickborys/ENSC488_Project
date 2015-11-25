@@ -9,6 +9,7 @@
 #include <gl\GL.h>
 
 #include "drawFunctions.h"
+#include "elnaz.h"
 #include "Camera.h"
 
 void drawCamera(const GLfloat eye[], const GLfloat focus[], const GLfloat rotc[], const GLint draw_rot);
@@ -48,11 +49,13 @@ void renderScene(void)
 
 	camera.Update();
 
-	glColor3f(1, 0, 0);
-	glutSolidCube(1);
-	drawWheel();
+	//glColor3f(1, 0, 0);
+	//glutSolidCube(1);
+	//drawWheel();
+	glScalef(10, 10, 10);
+	drawarm();
 
-	drawFloor(100, 100, -1);
+	//drawFloor(100, 100, -1);
 
 	glutSwapBuffers();
 	return;
