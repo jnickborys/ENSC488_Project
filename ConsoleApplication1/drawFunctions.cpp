@@ -149,5 +149,12 @@ void drawWheel()
 		glRotatef(90, 1, 0, 0);
 		drawCircle(4.5, 12);
 	glPopMatrix();
+	
+	glPushMatrix();
+		glTranslatef(0, 0, 3);
+		glRotatef(90, 1, 0, 0);
+		drawCircle(4.5, 12);
+	glPopMatrix();
+
 	return;
 }

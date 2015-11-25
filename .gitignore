@@ -51,3 +51,6 @@ ConsoleApplication1/Debug/vc120.idb
 *.ipch
 *.log
 ConsoleApplication1/Debug/RoboticsProject.pch
+*.opensdf
+ENSC488_Project.sdf
+*.sdf
