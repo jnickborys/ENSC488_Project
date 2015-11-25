@@ -51,6 +51,7 @@ void renderScene(void)
 
 	//glColor3f(1, 0, 0);
 	//glutSolidCube(1);
+
 	//drawWheel();
 	glScalef(1, 1, 1);
 	drawarm();

@@ -32,7 +32,7 @@ void drawarm ()
 
 	glPushMatrix();
 		glColor3f(1,0.5,0.5);
-		glTranslatef (0,-14.0,0);
+		glTranslatef (0,0,0);
 		glutSolidSphere (1,50,50); 
 	glPopMatrix();
 
