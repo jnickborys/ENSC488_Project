@@ -46,6 +46,11 @@ int _tmain(int argc, char argv[])
 	GLUI_Master.set_glutIdleFunc(idle);
 	GLUI_Master.auto_set_viewport();
 
+	// Enables Basic Lighting and Shading
+	// https://www.cse.msu.edu/~cse872/tutorial3.html
+	// Makes glColor* not useful can change colours by 
+	// changing material properties
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);

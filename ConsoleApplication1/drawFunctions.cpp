@@ -159,6 +159,9 @@ void drawWheel()
 	wheel = gluNewQuadric();
 	gluQuadricNormals(wheel, GLU_SMOOTH);
 	glPushMatrix();
+		
+		GLfloat cyan[] = { 0.f, .8f, .8f, 1.f };
+		glMaterialfv(GL_FRONT, GL_SHININESS, cyan);
 		gluCylinder(wheel, 1, 1, 1, 24, 24);
 		glRotatef(270, 1, 0, 0);
 		drawCircle(1, 24);
