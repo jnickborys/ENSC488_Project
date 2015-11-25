@@ -37,7 +37,7 @@ void drawarm ()
 	glPopMatrix();
 
 	glPushMatrix();
-		glTranslatef (0,-13,0.0);
+		glTranslatef (0,-7,0);
 		glColor3f(0.5,1,0.5);
 		glScalef(1.6,12,1.6);
 		glutSolidCube(1);
@@ -45,8 +45,22 @@ void drawarm ()
 
 	glPushMatrix();
 		glColor3f(1,0.5,0.5);
-		glTranslatef (0,1,0);
+		glTranslatef (0,-14,0);
 		glutSolidSphere (1,50,50); 
+	glPopMatrix ();
+
+	glPushMatrix();
+		glTranslatef (0,-21,0);
+		glColor3f(0.5,1,0.5);
+		glScalef(1.6,12,1.6);
+		glutSolidCube(1);
+	glPopMatrix ();
+
+	glPushMatrix();
+		glTranslatef (0,7,0);
+		glColor3f(0.5,1,0.5);
+		glScalef(1.6,12,1.6);
+		glutSolidCube(1);
 	glPopMatrix ();
 
 
