@@ -1,4 +1,6 @@
 
+void drawJeremy();
+
 void drawAxis(const GLfloat scale);
 
 void drawFloor(const GLfloat width, const GLfloat height, const GLfloat depth);

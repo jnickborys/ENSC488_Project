@@ -25,6 +25,21 @@ struct Rotation	//Struct that passes values to change various Orientations of th
 
 GLUquadric *quad;
 
+/*
+	Elnaz insert all your drawing code in the function drawElnaz(). drawElnaz() 
+	will automatically be called so anything you include in drawJim() will be drawn
+
+	You can comment out both drawJim(); drawJeremy(); in utils_488.cpp::renderScene and
+	nothing will be affected and we won't overwrite eachothers code
+*/
+void drawElnaz()
+{
+	glScalef(1, 1, 1);
+	drawarm();
+	return;
+}
+
+
 //Using two Longer Cubes and a Joint to Show a full Arm
 void drawarm ()
 {
