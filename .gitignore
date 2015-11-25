@@ -78,3 +78,4 @@ ConsoleApplication1/ConsoleApplication1.vcxproj
 ConsoleApplication1/Camera.cpp
 
 ConsoleApplication1/Camera.cpp
+*.sdf

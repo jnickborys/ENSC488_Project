@@ -47,6 +47,8 @@ int _tmain(int argc, char argv[])
 	GLUI_Master.auto_set_viewport();
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 
 	glutMainLoop();
 
