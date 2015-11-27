@@ -10,6 +10,7 @@
 
 #include "drawFunctions.h"
 #include "elnaz.h"
+#include "jim.h"
 #include "Camera.h"
 
 void drawCamera(const GLfloat eye[], const GLfloat focus[], const GLfloat rotc[], const GLint draw_rot);
@@ -49,11 +50,15 @@ void renderScene(void)
 
 	camera.Update();
 
-	//glColor3f(1, 0, 0);
-	//glutSolidCube(1);
-	//drawWheel();
-	glScalef(10, 10, 10);
-	drawarm();
+	// To make the Code more separated I am including some functions to 
+	// break out our code this way all changes can be done in the specific 
+	// draw functions
+
+	drawElnaz();
+
+	drawJeremy();
+	
+	drawJim();
 
 	//drawFloor(100, 100, -1);
 
