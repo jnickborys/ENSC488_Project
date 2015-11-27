@@ -5,9 +5,16 @@
 #include <gl\GLU.h>
 #include <gl\GL.h>
 
+#include "drawFunctions.h"
+
 #define PI 3.1415926535
 //const GLfloat INCHES_TO_M = 0.0254;
 #define INCHES_TO_M 0.0254;
+
+void drawJeremy()
+{
+	drawWheel();
+}
 
 void drawAxis(const GLfloat scale)
 {
@@ -124,6 +131,7 @@ void drawRectBox(const GLfloat width, const GLfloat height, GLfloat depth)
 
 void drawBase()
 {
+	drawWheel();
 	return;
 }
 
@@ -152,16 +160,15 @@ void drawWheel()
 
 	static const GLfloat D2 = 3 * INCHES_TO_M;
 
-	static const GLfloat lightBlack[] = { 0.25, 0.25, 0.25 };
+	static const GLfloat lightBlack[] = { 0.35, 0.35, 0.35 };
 	static const GLfloat darkerBlack[] = { 0.20, 0.20, 0.20 };
+
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, lightBlack);
 
 	GLUquadric* wheel;
 	wheel = gluNewQuadric();
 	gluQuadricNormals(wheel, GLU_SMOOTH);
 	glPushMatrix();
-		
-		GLfloat cyan[] = { 0.f, .8f, .8f, 1.f };
-		glMaterialfv(GL_FRONT, GL_SHININESS, cyan);
 		gluCylinder(wheel, 1, 1, 1, 24, 24);
 		glRotatef(270, 1, 0, 0);
 		drawCircle(1, 24);
