@@ -10,9 +10,20 @@
 
 #include "drawFunctions.h"
 #include "elnaz.h"
+#include "jim.h"
 #include "Camera.h"
 
 void drawCamera(const GLfloat eye[], const GLfloat focus[], const GLfloat rotc[], const GLint draw_rot);
+
+//float RotationDeg = 0;  // should make a dynamic value that change rotation.
+float DistFromOrigin = 2;
+
+GLfloat WristLinkParams[][4] = { { 0,1,0,0 },
+								{ 0,1,0,0 },
+								{ 0,0,0,DistFromOrigin },
+								{ 0,0,0,-DistFromOrigin } };
+
+
 
 //GLfloat _Oldeye[] = { 10, 10, 10};
 //GLfloat _Oldfocus[] = { 0, 10, 0 };
@@ -49,11 +60,15 @@ void renderScene(void)
 
 	camera.Update();
 
-	//glColor3f(1, 0, 0);
-	//glutSolidCube(1);
-	//drawWheel();
-	glScalef(10, 10, 10);
-	drawarm();
+	// To make the Code more separated I am including some functions to 
+	// break out our code this way all changes can be done in the specific 
+	// draw functions
+
+	//drawElnaz();             //<<<<<<<<<<<<<<<<<<<<<<<
+
+	//drawJeremy();           //<<<<<<<<<<<<<<<<<<<<<<<<
+	
+	drawJim(WristLinkParams);
 
 	//drawFloor(100, 100, -1);
 
@@ -88,6 +103,36 @@ void keyBoardEventHandler(unsigned char key, int x, int y)
 	case 'd':
 		camera.Move(right);
 		break;
+	case 'o':
+		WristLinkParams[1][2] += 10;
+		break;
+	case 'p':
+		WristLinkParams[1][2] -= 10;
+		break;
+
+	case 'k':
+		WristLinkParams[2][3] += 0.2;
+		WristLinkParams[3][3] -= 0.2;
+
+		//Limit the open position
+		if (WristLinkParams[2][3] >= 2) {
+			WristLinkParams[2][3] = 2;
+			WristLinkParams[3][3] = -2;
+		}
+		break;
+	case 'l':
+	
+		WristLinkParams[2][3] -= 0.2;
+		WristLinkParams[3][3] += 0.2;
+		
+		//Limit the close position
+		if (WristLinkParams[2][3] <= 0) {
+			WristLinkParams[2][3] = 0;
+			WristLinkParams[3][3] = 0;
+		}
+
+		break;
+
 	case 27: // "27" is theEscape key
 		exit(1);
 	}
@@ -198,6 +243,7 @@ void drawCamera(const GLfloat eye[], const GLfloat focus[], const GLfloat rotc[]
 }
 
 /*
+delta_frame ( alpha,a,theta,d)
 	Draws a position using a delta_frame which is a difference between two reference frames A and B.
 
 	delta_frame is of size 4and has the parameters:

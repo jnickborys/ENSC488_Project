@@ -5,7 +5,16 @@
 #include <gl\GLU.h>
 #include <gl\GL.h>
 
+#include "drawFunctions.h"
+
 #define PI 3.1415926535
+//const GLfloat INCHES_TO_M = 0.0254;
+#define INCHES_TO_M 0.0254;
+
+void drawJeremy()
+{
+	drawWheel();
+}
 
 void drawAxis(const GLfloat scale)
 {
@@ -122,12 +131,14 @@ void drawRectBox(const GLfloat width, const GLfloat height, GLfloat depth)
 
 void drawBase()
 {
+	drawWheel();
 	return;
 }
 
 void drawCircle(const GLfloat radius, const int num_segments)
 {
 	glBegin(GL_POLYGON);
+	glNormal3d(0, 1, 0);
 
 	for (int i = 0; i < num_segments; ++i)
 	{
@@ -141,19 +152,32 @@ void drawCircle(const GLfloat radius, const int num_segments)
 
 void drawWheel()
 {
+	static const GLfloat R1 = 3 * INCHES_TO_M;
+	static const GLfloat R2 = 4.5 * INCHES_TO_M;
+	static const GLfloat R3 = 5 * INCHES_TO_M;
+
+	static const GLfloat H1 = R3 + 1 * INCHES_TO_M;
+
+	static const GLfloat D2 = 3 * INCHES_TO_M;
+
+	static const GLfloat lightBlack[] = { 0.35, 0.35, 0.35 };
+	static const GLfloat darkerBlack[] = { 0.20, 0.20, 0.20 };
+
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, lightBlack);
+
 	GLUquadric* wheel;
 	wheel = gluNewQuadric();
 	gluQuadricNormals(wheel, GLU_SMOOTH);
-	gluCylinder(wheel, 4.5, 4.5, 3, 12, 12);
 	glPushMatrix();
-		glRotatef(90, 1, 0, 0);
-		drawCircle(4.5, 12);
+		gluCylinder(wheel, 1, 1, 1, 24, 24);
+		glRotatef(270, 1, 0, 0);
+		drawCircle(1, 24);
 	glPopMatrix();
 	
 	glPushMatrix();
-		glTranslatef(0, 0, 3);
+		glTranslatef(0, 0, 1);
 		glRotatef(90, 1, 0, 0);
-		drawCircle(4.5, 12);
+		drawCircle(1, 24);
 	glPopMatrix();
 
 	return;
