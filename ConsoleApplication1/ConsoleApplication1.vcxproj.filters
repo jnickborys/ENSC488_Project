@@ -33,10 +33,10 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="jim.h">
+    <ClInclude Include="elnaz.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="elnaz.h">
+    <ClInclude Include="jim.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

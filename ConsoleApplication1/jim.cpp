@@ -1,6 +1,7 @@
 // Jim's Implemented Source Code
 #include "stdafx.h"
 #include "jim.h"
+
 #include<math.h> // Math Functions Library
 #include<windows.h> // Windows API library
 #include<GL/gl.h> // OpenGL Library
@@ -8,6 +9,7 @@
 #include "GL/glui.h" // Including the glui libraries (if needed)
 #include "utils_488.h"
 #include "drawFunctions.h"
+
 
 /* 
 	Jim Include all your draw code in drawJim(), drawJim() will automatically be called so
@@ -105,3 +107,4 @@ void drawWrist(const float WristLinkParam[][4]) {
 
 	
 }
+

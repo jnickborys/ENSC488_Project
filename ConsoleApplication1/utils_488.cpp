@@ -23,6 +23,20 @@ GLfloat WristLinkParams[][4] = { { 0,1,0,0 },
 								{ 0,0,0,DistFromOrigin },
 								{ 0,0,0,-DistFromOrigin } };
 
+	int alpha1=0;
+	int alpha2=0;
+	int alpha3=0;
+	int alpha4=0;
+	int theta1=0;
+	int d1=1;
+	int d2=1;
+	int d3=1;
+	int d4=1;
+
+GLfloat jointParam[][4]={{theta1,0,alpha1,0}, 
+							 {0,0,alpha2,d1},
+							 {0,0,alpha3,d2},
+							 {0,0,alpha4,d3}};
 
 
 //GLfloat _Oldeye[] = { 10, 10, 10};
@@ -64,11 +78,11 @@ void renderScene(void)
 	// break out our code this way all changes can be done in the specific 
 	// draw functions
 
-	//drawElnaz();             //<<<<<<<<<<<<<<<<<<<<<<<
+	drawElnaz(jointParam);
 
-	//drawJeremy();           //<<<<<<<<<<<<<<<<<<<<<<<<
+	//drawJeremy();
 	
-	drawJim(WristLinkParams);
+	//drawJim(WristLinkParams);
 
 	//drawFloor(100, 100, -1);
 
@@ -132,7 +146,9 @@ void keyBoardEventHandler(unsigned char key, int x, int y)
 		}
 
 		break;
-
+	case 'm':
+		jointParam[0][0]+=10;
+		break;
 	case 27: // "27" is theEscape key
 		exit(1);
 	}
