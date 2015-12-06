@@ -6,14 +6,82 @@
 #include <gl\GL.h>
 
 #include "drawFunctions.h"
+#include "utils_488.h"
 
 #define PI 3.1415926535
 //const GLfloat INCHES_TO_M = 0.0254;
 #define INCHES_TO_M 0.0254;
+#define M_TO_IN 1/0.0254;
 
 void drawJeremy()
 {
-	drawWheel();
+
+	//static const GLfloat R2 = 4.5 * INCHES_TO_M;
+	static const GLfloat R2 = 4.5 * INCHES_TO_M;
+	static const GLfloat R3 = 5 * INCHES_TO_M;
+
+	const float W2a = 18;
+	const float W2 = (2 * R3 + W2a) * INCHES_TO_M;
+
+	const float W3 = 1.5 * INCHES_TO_M;
+	const float D1 = 2 * 12.0 * INCHES_TO_M;
+	
+	const float W1 = 2 * R3 + W2 + 2 * W3;
+	const float H2 = 1.5 * INCHES_TO_M;
+	const float H1 = H2 + R2;
+
+
+
+	const GLfloat jeremyLP[][4] = { 
+									// Front Axle
+									{ 0, W2 / 2, 0, 0},
+									{ 0, 0, 0, D1/2 },
+									{ 0, 0, 0, -D1/2},
+
+									// Back Axle
+									{ 0, -W2 / 2, 0, 0 },
+									{ 0, 0, 0, D1 / 2 },
+									{ 0, 0, 0, -D1 / 2 }
+
+								};
+	enum { FrontAxle, FLWheel, FRWheel, BackAxle, BLWheel, BRWheel };
+	glPushMatrix(); // origin center of the robot
+		// Move to the front Axle
+		frame2frame(jeremyLP[FrontAxle], 1, 0);
+		glPushMatrix();
+			frame2frame(jeremyLP[FLWheel], 1, 0);
+			drawWheel();
+		glPopMatrix();
+		glPushMatrix();
+			frame2frame(jeremyLP[FRWheel], 1, 0);
+			glRotatef(180, 0, 1, 0);
+			drawWheel();
+		glPopMatrix();
+	glPopMatrix(); // Back to the Center
+
+	glPushMatrix(); // origin center of the robot
+		// Move to the front Axle
+		frame2frame(jeremyLP[BackAxle], 1, 0);
+		glPushMatrix();
+			frame2frame(jeremyLP[BLWheel], 1, 0);
+			drawWheel();
+		glPopMatrix();
+		glPushMatrix();
+			frame2frame(jeremyLP[BRWheel], 1, 0);
+			glRotatef(180, 0, 1, 0);
+			drawWheel();
+		glPopMatrix();
+	glPopMatrix(); // Back to the Center
+
+	// Draw the Body pushing for scaling
+	glPushMatrix();
+		static const GLfloat lightBlack[] = { 0.35, 0.35, 0.35 };
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, lightBlack);
+		glTranslatef(0, H1/2, 0);
+		glScalef(W1, H1, D1);
+		glutSolidCube(1);
+	glPopMatrix();
+	glTranslatef(0, H1 / 2, 0);
 }
 
 void drawAxis(const GLfloat scale)
@@ -49,7 +117,6 @@ void drawAxis(const GLfloat scale)
 	glPointSize(1);
 	glPopMatrix();
 }
-
 
 void drawFloor(const GLfloat width, const GLfloat height, const GLfloat depth)
 {
@@ -164,6 +231,8 @@ void drawWheel()
 	static const GLfloat darkerBlack[] = { 0.20, 0.20, 0.20 };
 
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, lightBlack);
+	glPushMatrix();
+	glScalef(R2, R2, D2);
 
 	GLUquadric* wheel;
 	wheel = gluNewQuadric();
@@ -178,6 +247,7 @@ void drawWheel()
 		glTranslatef(0, 0, 1);
 		glRotatef(90, 1, 0, 0);
 		drawCircle(1, 24);
+	glPopMatrix();
 	glPopMatrix();
 
 	return;
