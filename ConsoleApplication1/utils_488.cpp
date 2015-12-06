@@ -15,6 +15,21 @@
 
 void drawCamera(const GLfloat eye[], const GLfloat focus[], const GLfloat rotc[], const GLint draw_rot);
 
+	int alpha1=0;
+	int alpha2=0;
+	int alpha3=0;
+	int alpha4=0;
+	int theta1=0;
+	int d1=1;
+	int d2=1;
+	int d3=1;
+	int d4=1;
+
+GLfloat jointParam[][4]={{theta1,0,alpha1,0}, 
+							 {0,0,alpha2,d1},
+							 {0,0,alpha3,d2},
+							 {0,0,alpha4,d3}};
+
 //GLfloat _Oldeye[] = { 10, 10, 10};
 //GLfloat _Oldfocus[] = { 0, 10, 0 };
 //GLfloat _Oldrotc[] = { 0, 0 };
@@ -50,15 +65,18 @@ void renderScene(void)
 
 	camera.Update();
 
+	
+
 	// To make the Code more separated I am including some functions to 
 	// break out our code this way all changes can be done in the specific 
 	// draw functions
 
-	drawElnaz();
+	drawElnaz(jointParam);
 
-	drawJeremy();
+
+	//drawJeremy();
 	
-	drawJim();
+	//drawJim();
 
 	//drawFloor(100, 100, -1);
 
@@ -92,6 +110,9 @@ void keyBoardEventHandler(unsigned char key, int x, int y)
 		break;
 	case 'd':
 		camera.Move(right);
+		break;
+	case 'm':
+		jointParam[0][0]+=10;
 		break;
 	case 27: // "27" is theEscape key
 		exit(1);

@@ -7,6 +7,8 @@
 #include<GL/gl.h> // OpenGL Library
 #include<GL/glut.h> // GLUT Library
 #include "GL/glui.h" // Including the glui libraries (if needed)
+#include "utils_488.h"
+#include "drawFunctions.h"
 
 // Menue selection declarations
 #define RED 1
@@ -32,16 +34,83 @@ GLUquadric *quad;
 	You can comment out both drawJim(); drawJeremy(); in utils_488.cpp::renderScene and
 	nothing will be affected and we won't overwrite eachothers code
 */
-void drawElnaz()
+void drawElnaz(const float jointParam[][4])
 {
 	glScalef(1, 1, 1);
-	drawarm();
+	//drawarm();
+	drawNewArm(jointParam);
 	return;
 }
 
+void drawNewArm(const float jointParam[][4])
+{
+	glPushMatrix();
+	float d1=1;
+	float d2=1;
+	float d3=1;
+	float d4=1;
+
+	GLfloat radius = 0.25;
+	float lenght1=d1-radius ;
+	float lenght2=d2-(2*radius) ;
+	float lenght3=d3-radius ;
+
+	drawAxis(1.0);// draw at the origin
+	
+	
+
+	frame2frame(jointParam[0],0,0);
+	glPushMatrix();
+	glTranslatef(0,0,lenght1/2.0);
+		glColor3f(0.5,1,0.5);
+		glScalef(radius,radius,lenght1);
+		glutSolidCube(1);
+	glPopMatrix ();
+	drawAxis(1.0);
+
+	frame2frame(jointParam[1],0,0);
+	glPushMatrix();
+		glColor3f(1,0.5,0.5);
+		glScalef(radius, radius, radius);
+		glutSolidSphere (1,50,50); 
+	glPopMatrix();
+
+
+	glPushMatrix();
+		glTranslatef(0,0,radius+lenght2/2.0);
+		glColor3f(0.5,1,0.5);
+		glScalef(radius,radius,lenght2);
+		glutSolidCube(1);
+	glPopMatrix ();
+	drawAxis(1.0);
+
+
+	frame2frame(jointParam[2],0,0);
+	glPushMatrix();
+		glColor3f(1,0.5,0.5);
+		glScalef(radius, radius, radius);
+		glutSolidSphere (1,50,50); 
+	glPopMatrix();
+	drawAxis(1.0);
+
+	frame2frame(jointParam[3],0,0);
+	glPushMatrix();
+		glTranslatef(0,0,-1*(lenght3/2.0));
+		glColor3f(0.5,1,0.5);
+		glScalef(radius,radius,lenght3);
+		glutSolidCube(1);
+	glPopMatrix ();
+	drawAxis(1.0);
+	
+	
+glPopMatrix ();
+
+						 
+}						
+
 
 //Using two Longer Cubes and a Joint to Show a full Arm
-void drawarm ()
+/*void drawarm ()
 {
 	glPushMatrix();
 
@@ -83,7 +152,7 @@ void drawarm ()
 
 	
 }
-
+*/
 
 //Function Definition to Draw Cubes
 void drawcube ()
