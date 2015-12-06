@@ -11,9 +11,9 @@ Camera::Camera()
 {
 	// There has got to be a better way of initializing a pointer to an array
 	_eye = new GLfloat[3];
-	_eye[0] = 9;
-	_eye[1] = 10;
-	_eye[2] = 10;
+	_eye[0] = 1;
+	_eye[1] = 3;
+	_eye[2] = 3;
 	
 	_focus = new GLfloat[3];
 	_focus[0] = 0;

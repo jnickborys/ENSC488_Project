@@ -39,10 +39,10 @@
     <ClInclude Include="jim.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface.h">
+    <ClInclude Include="stateInformation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="stateInformation.h">
+    <ClInclude Include="UserInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

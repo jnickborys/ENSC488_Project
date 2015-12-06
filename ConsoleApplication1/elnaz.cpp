@@ -8,6 +8,10 @@
 #include<GL/glut.h> // GLUT Library
 #include "GL/glui.h" // Including the glui libraries (if needed)
 
+#include "utils_488.h"
+#include "drawFunctions.h"
+#include "stateInformation.h"
+
 // Menue selection declarations
 #define RED 1
 #define GREEN 2
@@ -32,16 +36,17 @@ GLUquadric *quad;
 	You can comment out both drawJim(); drawJeremy(); in utils_488.cpp::renderScene and
 	nothing will be affected and we won't overwrite eachothers code
 */
-void drawElnaz()
+void drawElnaz(const float jointParam[][4])
 {
 	glScalef(1, 1, 1);
-	drawarm();
+	//drawarm();
+	drawNewArm(jointParam);
 	return;
 }
 
 void drawNewArm(const float jointParam[][4])
 {
-	glPushMatrix();
+//glPushMatrix();
 	float d1=1; // 1 meter
 	float d2=1;
 	float d3=1;
@@ -53,8 +58,6 @@ void drawNewArm(const float jointParam[][4])
 	float lenght3=d3-radius ;
 
 	drawAxis(1.0);// draw at the origin
-	
-	
 
 	frame2frame(jointParam[0],0,0);
 	glPushMatrix();
@@ -72,7 +75,6 @@ void drawNewArm(const float jointParam[][4])
 		glutSolidSphere (1,50,50); 
 	glPopMatrix();
 
-
 	glPushMatrix();
 		glTranslatef(0,0,radius+lenght2/2.0);
 		glColor3f(0.5,1,0.5);
@@ -80,7 +82,6 @@ void drawNewArm(const float jointParam[][4])
 		glutSolidCube(1);
 	glPopMatrix ();
 	drawAxis(1.0);
-
 
 	frame2frame(jointParam[2],0,0);
 	glPushMatrix();
@@ -100,7 +101,7 @@ void drawNewArm(const float jointParam[][4])
 	drawAxis(1.0);
 	
 	
-glPopMatrix ();
+//glPopMatrix ();
 
 						 
 }

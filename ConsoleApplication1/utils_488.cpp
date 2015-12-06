@@ -67,10 +67,13 @@ void renderScene(void)
 	drawJeremy();
 	
 	glRotatef(-90, 1, 0, 0);
-	drawElnaz(forwardKinParam);
+	glPushMatrix();
+		drawElnaz(forwardKinParam);
 
-	drawJim(WristLinkParams);
-
+		glRotatef(-90, 0, 1, 0);
+		glScalef(0.1, 0.1, 0.1);
+		drawJim(WristLinkParams);
+	glPopMatrix();
 	//drawFloor(100, 100, -1);
 
 	glutSwapBuffers();
