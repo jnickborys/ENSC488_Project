@@ -45,12 +45,12 @@ void drawElnaz(const float jointParam[][4])
 void drawNewArm(const float jointParam[][4])
 {
 	glPushMatrix();
-	float d1=1;
+	float d1=1; // 1 meter
 	float d2=1;
 	float d3=1;
 	float d4=1;
 
-	GLfloat radius = 0.25;
+	GLfloat radius = 0.05; // in centimeters
 	float lenght1=d1-radius ;
 	float lenght2=d2-(2*radius) ;
 	float lenght3=d3-radius ;

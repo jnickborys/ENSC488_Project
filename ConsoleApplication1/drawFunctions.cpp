@@ -5,8 +5,8 @@
 #include <gl\GLU.h>
 #include <gl\GL.h>
 
-#include "drawFunctions.h"
 #include "utils_488.h"
+#include "drawFunctions.h"
 
 #define PI 3.1415926535
 //const GLfloat INCHES_TO_M = 0.0254;
@@ -29,8 +29,6 @@ void drawJeremy()
 	const float W1 = 2 * R3 + W2 + 2 * W3;
 	const float H2 = 1.5 * INCHES_TO_M;
 	const float H1 = H2 + R2;
-
-
 
 	const GLfloat jeremyLP[][4] = { 
 									// Front Axle

@@ -8,13 +8,36 @@
 #include <gl\GLU.h>
 #include <gl\GL.h>
 
+#include "stateInformation.h"
 #include "utils_488.h"
 #include "drawFunctions.h"
+#include "UserInterface.h"
 
 // TODO: Change the name to be more consistent.
 const char* APPLICATION_NAME = "ENSC 488 Robot";
 
 int main_window;
+
+int alpha1 = 0;
+int alpha2 = 0;
+int alpha3 = 0;
+int alpha4 = 0;
+int theta1 = 0;
+int d1 = 1;
+int d2 = 1;
+int d3 = 1;
+int d4 = 1;
+
+GLfloat forwardKinParam[][4] = { { theta1, 0, alpha1, 0 },
+							{ 0, 0, alpha2, d1 },
+							{ 0, 0, alpha3, d2 },
+							{ 0, 0, alpha4, d3 },
+							{ 0, 0, 0, 0 },
+							{ 0, 0, 0, 0 },
+							{ 0, 0, 0, 0 },
+							};
+
+GLfloat inverseKinParam[3] = { 0, 0, 0 };
 
 // GLUT Specifics
 void idle(void)
@@ -45,6 +68,8 @@ int _tmain(int argc, char argv[])
 	GLUI_Master.set_glutReshapeFunc(reshapeEventHandler);
 	GLUI_Master.set_glutIdleFunc(idle);
 	GLUI_Master.auto_set_viewport();
+
+	initGUI(main_window, forwardKinParam, inverseKinParam);
 
 	// Enables Basic Lighting and Shading
 	// https://www.cse.msu.edu/~cse872/tutorial3.html
