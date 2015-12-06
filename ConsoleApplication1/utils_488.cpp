@@ -46,8 +46,38 @@ void mouseEventHandler(int button, int state, int x, int y)
 	return;
 }
 
+void ComputeInvKin(GLfloat linkFrameParam[][4], int link)
+{
+	float currentFrame[16] = { 0 };
+	float temp_val = 0;
+	float theta1 = 0;
+	float theta2 = 0;
+	float px, py;
+
+
+	glGetFloatv(GL_MODELVIEW_MATRIX, currentFrame);
+	temp_val = linkFrameParam[link][3];
+
+	px = currentFrame[12];
+	py = currentFrame[13];
+
+	float val1 = sqrtf(px*px + py*py - temp_val*temp_val);
+	float thetap = atan2f(py, px);
+
+	float theta_val = atan2f(temp_val, val1);
+
+	theta1 = thetap - theta_val;
+	theta1 = theta1 * 180 / 3.14159265;
+
+	theta2 = thetap + theta_val;
+	theta2 = theta2 * 180 / 3.14159265;
+
+	return;
+}
+
 void renderScene(void)
 {
+
 	glDepthMask(GL_TRUE);
 	glClearColor(0.4f, 0.4f, 0.95, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -60,21 +90,37 @@ void renderScene(void)
 
 	camera.Update();
 
+	float modelMatrix[16] = { 0 };
+	float projMatrix[16] = { 0 };
+
+	static GLfloat DHParam[][4] = { { 0, 0, -45, 1 },
+									{0, 0, 45, 1} };
+	frame2frame(DHParam[0], 1, 0);
+	frame2frame(DHParam[1], 1, 0);
+
+	ComputeInvKin(DHParam, 0);
+
+	//glGetFloatv(GL_PROJECTION, projMatrix);
+	//glGetFloatv(GL_MODELVIEW_MATRIX, modelMatrix);
+
+	//glutSolidCube(.2);
+
+
 	// To make the Code more separated I am including some functions to 
 	// break out our code this way all changes can be done in the specific 
 	// draw functions
 
-	drawJeremy();
-	
-	glRotatef(-90, 1, 0, 0);
-	glPushMatrix();
-		drawElnaz(forwardKinParam);
+	//drawJeremy();
+	//
+	//glRotatef(-90, 1, 0, 0);
+	//glPushMatrix();
+	//	drawElnaz(forwardKinParam);
 
-		glRotatef(-90, 0, 1, 0);
-		glScalef(0.1, 0.1, 0.1);
-		drawJim(WristLinkParams);
-	glPopMatrix();
-	//drawFloor(100, 100, -1);
+	//	glRotatef(-90, 0, 1, 0);
+	//	glScalef(0.1, 0.1, 0.1);
+	//	drawJim(WristLinkParams);
+	//glPopMatrix();
+	////drawFloor(100, 100, -1);
 
 	glutSwapBuffers();
 	return;
@@ -269,7 +315,7 @@ void frame2frame(const GLfloat delta_frame[], GLint enable_vertice_axis, GLint n
 	glPointSize(1);
 
 	if (enable_vertice_axis)
-		drawAxis(0.1);
+		drawAxis(0.5);
 
 	glRotatef(delta_frame[alpha], 0, 0, 1);
 
@@ -305,7 +351,7 @@ void frame2frame(const GLfloat delta_frame[], GLint enable_vertice_axis, GLint n
 	glTranslatef(0, 0, delta_frame[d]);
 	
 	if (enable_vertice_axis)
-		drawAxis(0.1);
+		drawAxis(0.5);
 
 	glPointSize(5);
 		glBegin(GL_POINTS);
@@ -316,6 +362,5 @@ void frame2frame(const GLfloat delta_frame[], GLint enable_vertice_axis, GLint n
 	if (enable_vertice_axis)
 		drawAxis(0.1);
 }
-
 
 
