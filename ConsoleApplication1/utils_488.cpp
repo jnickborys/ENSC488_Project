@@ -17,6 +17,14 @@
 
 void drawCamera(const GLfloat eye[], const GLfloat focus[], const GLfloat rotc[], const GLint draw_rot);
 
+//float RotationDeg = 0;  // should make a dynamic value that change rotation.
+float DistFromOrigin = 2;
+
+GLfloat WristLinkParams[][4] = { { 0,1,0,0 },
+								{ 0,1,0,0 },
+								{ 0,0,0,DistFromOrigin },
+								{ 0,0,0,-DistFromOrigin } };
+
 //GLfloat _Oldeye[] = { 10, 10, 10};
 //GLfloat _Oldfocus[] = { 0, 10, 0 };
 //GLfloat _Oldrotc[] = { 0, 0 };
@@ -61,7 +69,7 @@ void renderScene(void)
 	glRotatef(-90, 1, 0, 0);
 	drawElnaz(forwardKinParam);
 
-	drawJim();
+	drawJim(WristLinkParams);
 
 	//drawFloor(100, 100, -1);
 
@@ -95,6 +103,35 @@ void keyBoardEventHandler(unsigned char key, int x, int y)
 		break;
 	case 'd':
 		camera.Move(right);
+		break;
+	case 'o':
+		WristLinkParams[1][2] += 10;
+		break;
+	case 'p':
+		WristLinkParams[1][2] -= 10;
+		break;
+
+	case 'k':
+		WristLinkParams[2][3] += 0.2;
+		WristLinkParams[3][3] -= 0.2;
+
+		//Limit the open position
+		if (WristLinkParams[2][3] >= 2) {
+			WristLinkParams[2][3] = 2;
+			WristLinkParams[3][3] = -2;
+		}
+		break;
+	case 'l':
+	
+		WristLinkParams[2][3] -= 0.2;
+		WristLinkParams[3][3] += 0.2;
+		
+		//Limit the close position
+		if (WristLinkParams[2][3] <= 0) {
+			WristLinkParams[2][3] = 0;
+			WristLinkParams[3][3] = 0;
+		}
+
 		break;
 	case 'm':
 		forwardKinParam[0][0]+=10;
@@ -209,6 +246,7 @@ void drawCamera(const GLfloat eye[], const GLfloat focus[], const GLfloat rotc[]
 }
 
 /*
+delta_frame ( alpha,a,theta,d)
 	Draws a position using a delta_frame which is a difference between two reference frames A and B.
 
 	delta_frame is of size 4and has the parameters:

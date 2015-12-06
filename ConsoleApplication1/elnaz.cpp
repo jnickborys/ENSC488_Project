@@ -7,8 +7,6 @@
 #include<GL/gl.h> // OpenGL Library
 #include<GL/glut.h> // GLUT Library
 #include "GL/glui.h" // Including the glui libraries (if needed)
-#include "utils_488.h"
-#include "drawFunctions.h"
 
 // Menue selection declarations
 #define RED 1
@@ -34,11 +32,10 @@ GLUquadric *quad;
 	You can comment out both drawJim(); drawJeremy(); in utils_488.cpp::renderScene and
 	nothing will be affected and we won't overwrite eachothers code
 */
-void drawElnaz(const float jointParam[][4])
+void drawElnaz()
 {
 	glScalef(1, 1, 1);
-	//drawarm();
-	drawNewArm(jointParam);
+	drawarm();
 	return;
 }
 
@@ -106,11 +103,10 @@ void drawNewArm(const float jointParam[][4])
 glPopMatrix ();
 
 						 
-}						
-
+}
 
 //Using two Longer Cubes and a Joint to Show a full Arm
-/*void drawarm ()
+void drawarm ()
 {
 	glPushMatrix();
 
@@ -152,7 +148,7 @@ glPopMatrix ();
 
 	
 }
-*/
+
 
 //Function Definition to Draw Cubes
 void drawcube ()
