@@ -24,8 +24,10 @@ void drawJim(const float WristLinkParam[][4])
 {
 
 	glScalef(1, 1, 1);
-	drawWrist(WristLinkParam);
 
+	glScalef(2.0f, 2.0f, 2.0f);
+
+	drawWrist(WristLinkParam);
 	return;
 }
 
@@ -44,67 +46,98 @@ void drawWrist(const float WristLinkParam[][4]) {
 
 	//Wrist Base:  Joint to the arm. 
 	drawAxis(1.0);
-	
-	
+	glPushMatrix();
+		glScalef(0.5, 0.5, 0.5);
+		glutSolidSphere(0.5, 20, 20);
+	glPopMatrix();
+
+
 	//Wrist Carpals : rotation 
 	frame2frame(WristLinkParam[carpols], 0, 0);
 	drawAxis(1.0);
+	//Wrist Extender
+	glPushMatrix();
+		glScalef(1.5, 0.5, 0.5);
+		glutSolidCube(1.0);
+	glPopMatrix();
 
 	glPushMatrix();
-	//Wrist End Effector: 
-	frame2frame(WristLinkParam[clamp_origin], 0, 0);
-	drawAxis(1.0);
+		//Wrist End Effector: 
+		frame2frame(WristLinkParam[clamp_origin], 0, 0);
+		drawAxis(1.0);
+	
+		glPushMatrix();
+			glScalef(0.5, 0.5, 4.0);
+			glutSolidCube(1.0);
+		glPopMatrix();
+
+		glPushMatrix();       //Remember clamp_origin
+			frame2frame(WristLinkParam[left_clamp], 0, 0);
+			drawAxis(1.0);
+	
+			glScalef(0.50f, 0.50f, 0.5f);
+			glTranslatef(1.50f, -0.50f, 0.0f);
+			glRotatef(-180.0f, 0.0f, 1.0f, 0.0f);
+			drawClamp();
+
+		glPopMatrix();
 
 
-	glPushMatrix();       //Remember clamp_origin
-	frame2frame(WristLinkParam[left_clamp], 0, 0);
-	drawAxis(1.0);
-    glPopMatrix();
+		glPushMatrix();      //Remeber clamp_origin
+			frame2frame(WristLinkParam[right_clamp], 0, 0);
+			drawAxis(1.0);
 
+			glScalef(0.50f, 0.5f, 0.5f);
+			glTranslatef(0.5f, -0.50f, 0.0f);
+			drawClamp();
 
-	glPushMatrix();      //Remeber clamp_origin
-	frame2frame(WristLinkParam[right_clamp], 0, 0);
-	drawAxis(1.0);
+		glPopMatrix();
+	
 	glPopMatrix();
-
-	glPopMatrix();
-	////Wrist Hand
-	//glPushMatrix();
-	//glScalef(1, 1, 1);
-	//glTranslatef(0, 1, 0);
-	//glColor3f(1.0, 1.0, 0.0);
-	//glutSolidCube(1);
-	//glPopMatrix();
-	// 
-
-	////glPushMatrix();
-	////glTranslatef(0, -7, 0);
-	////glColor3f(0.5, 1, 0.5);
-	////glScalef(1.6, 12, 1.6);
-	////glutSolidCube(1);
-	////glPopMatrix();
-
-	////glPushMatrix();
-	////glColor3f(1, 0.5, 0.5);
-	////glTranslatef(0, -14, 0);
-	////glutSolidSphere(1, 50, 50);
-	////glPopMatrix();
-
-	////glPushMatrix();
-	////glTranslatef(0, -21, 0);
-	////glColor3f(0.5, 1, 0.5);
-	////glScalef(1.6, 12, 1.6);
-	////glutSolidCube(1);
-	////glPopMatrix();
-
-	////glPushMatrix();
-	////glTranslatef(0, 7, 0);
-	////glColor3f(0.5, 1, 0.5);
-	////glScalef(1.6, 12, 1.6);
-	//glutSolidCube(1);
-	//glPopMatrix();
-
-
 	
 }
 
+void drawClamp() {
+	
+	float dipVal = 0.4f;
+	glColor3f(0, 255, 0);   //Choose Color
+
+	glBegin(GL_QUADS); //Begin quadrilateral coordinates
+	//Wedge Front
+	glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f);
+	glVertex3f(1.0f, dipVal, 1.0f);
+	glVertex3f(1.0f, 0.0f, 1.0f);
+
+	//Wedge lower left
+	glVertex3f(1.0f, 0.0f, 1.0f);
+	glVertex3f(1.0f, dipVal, 1.0f);
+	glVertex3f(0.0f, dipVal, 1.0f);
+	glVertex3f(0.0f, 0.0f, 1.0f);
+
+	//Wedge Back
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, dipVal, 1.0f);
+	glVertex3f(0.0f, 0.0f, 1.0f);
+
+	//Wedge Right
+	glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+
+	//Wedge Top
+	glVertex3f(1.0f, dipVal, 1.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, dipVal, 1.0f);
+
+	//Wedge Bottom
+	glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(1.0f, 0.0f, 1.0f);
+	glEnd(); //End quadrilateral coordinates
+
+}

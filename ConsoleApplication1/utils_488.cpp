@@ -74,6 +74,7 @@ void renderScene(void)
 
 	camera.Update();
 
+
 	// To make the Code more separated I am including some functions to 
 	// break out our code this way all changes can be done in the specific 
 	// draw functions
@@ -136,16 +137,16 @@ void keyBoardEventHandler(unsigned char key, int x, int y)
 		break;
 	case 'l':
 	
-		WristLinkParams[2][3] -= 0.2;
-		WristLinkParams[3][3] += 0.2;
+		WristLinkParams[2][3] -= 0.1;
+		WristLinkParams[3][3] += 0.1;
 		
 		//Limit the close position
-		if (WristLinkParams[2][3] <= 0) {
-			WristLinkParams[2][3] = 0;
-			WristLinkParams[3][3] = 0;
+		if (WristLinkParams[2][3] <= 0.5) {
+			WristLinkParams[2][3] = 0.5;
+			WristLinkParams[3][3] = -0.5;
 		}
-
 		break;
+
 	case 'm':
 		jointParam[0][0]+=10;
 		break;
