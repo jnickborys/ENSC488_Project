@@ -11,6 +11,7 @@
 #include "utils_488.h"
 #include "drawFunctions.h"
 #include "stateInformation.h"
+#include "global_constants.h"
 
 // Menue selection declarations
 #define RED 1
@@ -57,31 +58,33 @@ void drawNewArm(const float jointParam[][4])
 	float lenght2=d2-(2*radius) ;
 	float lenght3=d3-radius ;
 
-	drawAxis(1.0);// draw at the origin
+	drawAxis(1.0, ENABLE_AXIS);// draw at the origin
 
 	frame2frame(jointParam[0],0,0);
 	glPushMatrix();
 	glTranslatef(0,0,lenght1/2.0);
-		glColor3f(0.5,1,0.5);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, ELNAZ_COLOUR);
 		glScalef(radius,radius,lenght1);
 		glutSolidCube(1);
 	glPopMatrix ();
-	drawAxis(1.0);
+	drawAxis(1.0, ENABLE_AXIS);
 
 	frame2frame(jointParam[1],0,0);
 	glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, ELNAZ_COLOUR);
 		glColor3f(1,0.5,0.5);
 		glScalef(radius, radius, radius);
 		glutSolidSphere (1,50,50); 
 	glPopMatrix();
 
 	glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, ELNAZ_COLOUR);
 		glTranslatef(0,0,radius+lenght2/2.0);
 		glColor3f(0.5,1,0.5);
 		glScalef(radius,radius,lenght2);
 		glutSolidCube(1);
 	glPopMatrix ();
-	drawAxis(1.0);
+	drawAxis(1.0, ENABLE_AXIS);
 
 	frame2frame(jointParam[2],0,0);
 	glPushMatrix();
@@ -89,7 +92,7 @@ void drawNewArm(const float jointParam[][4])
 		glScalef(radius, radius, radius);
 		glutSolidSphere (1,50,50); 
 	glPopMatrix();
-	drawAxis(1.0);
+	drawAxis(1.0, ENABLE_AXIS);
 
 	frame2frame(jointParam[3],0,0);
 	glPushMatrix();
@@ -98,11 +101,8 @@ void drawNewArm(const float jointParam[][4])
 		glScalef(radius,radius,lenght3);
 		glutSolidCube(1);
 	glPopMatrix ();
-	drawAxis(1.0);
-	
-	
+	drawAxis(1.0, ENABLE_AXIS);
 //glPopMatrix ();
-
 						 
 }
 

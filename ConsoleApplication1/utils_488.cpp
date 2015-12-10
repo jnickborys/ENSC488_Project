@@ -90,15 +90,15 @@ void renderScene(void)
 
 	camera.Update();
 
-	float modelMatrix[16] = { 0 };
-	float projMatrix[16] = { 0 };
+	//float modelMatrix[16] = { 0 };
+	//float projMatrix[16] = { 0 };
 
-	static GLfloat DHParam[][4] = { { 0, 0, -45, 1 },
-									{0, 0, 45, 1} };
-	frame2frame(DHParam[0], 1, 0);
-	frame2frame(DHParam[1], 1, 0);
+	//static GLfloat DHParam[][4] = { { 0, 0, -45, 1 },
+	//								{0, 0, 45, 1} };
+	//frame2frame(DHParam[0], 1, 0);
+	//frame2frame(DHParam[1], 1, 0);
 
-	ComputeInvKin(DHParam, 0);
+	//ComputeInvKin(DHParam, 0);
 
 	//glGetFloatv(GL_PROJECTION, projMatrix);
 	//glGetFloatv(GL_MODELVIEW_MATRIX, modelMatrix);
@@ -110,16 +110,16 @@ void renderScene(void)
 	// break out our code this way all changes can be done in the specific 
 	// draw functions
 
-	//drawJeremy();
-	//
-	//glRotatef(-90, 1, 0, 0);
-	//glPushMatrix();
-	//	drawElnaz(forwardKinParam);
+	drawJeremy();
+	
+	glRotatef(-90, 1, 0, 0);
+	glPushMatrix();
+		drawElnaz(forwardKinParam);
 
-	//	glRotatef(-90, 0, 1, 0);
-	//	glScalef(0.1, 0.1, 0.1);
-	//	drawJim(WristLinkParams);
-	//glPopMatrix();
+		glRotatef(-90, 0, 1, 0);
+		glScalef(0.1, 0.1, 0.1);
+		drawJim(WristLinkParams);
+	glPopMatrix();
 	////drawFloor(100, 100, -1);
 
 	glutSwapBuffers();

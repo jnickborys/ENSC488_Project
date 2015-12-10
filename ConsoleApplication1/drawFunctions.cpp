@@ -7,6 +7,7 @@
 
 #include "utils_488.h"
 #include "drawFunctions.h"
+#include "global_constants.h"
 
 #define PI 3.1415926535
 //const GLfloat INCHES_TO_M = 0.0254;
@@ -73,40 +74,50 @@ void drawJeremy()
 
 	// Draw the Body pushing for scaling
 	glPushMatrix();
-		static const GLfloat lightBlack[] = { 0.35, 0.35, 0.35 };
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, lightBlack);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, GREEN);
 		glTranslatef(0, H1/2, 0);
 		glScalef(W1, H1, D1);
 		glutSolidCube(1);
 	glPopMatrix();
 	glTranslatef(0, H1 / 2, 0);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, GREY);
 }
 
-void drawAxis(const GLfloat scale)
+void drawAxis(const GLfloat scale, const GLint enable)
 {
+	if (!enable)
+	{
+		return;
+	}
+	GLfloat color[4];
+	glGetFloatv(GL_CURRENT_COLOR, color);
 	glPushMatrix();
 
 	glLineWidth(1);
 	glPointSize(5);
-	glColor3f(1, 1, 1);
+	//glColor3f(1, 1, 1);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, WHITE);
 	glBegin(GL_POINTS);
 	glVertex3f(0, 0, 0);
 	glEnd();
 	//glutSolidSphere(0.025, 12, 40);
 
-	glColor3f(1, 0, 0);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, RED);
+	//glColor3f(1, 0, 0);
 	glBegin(GL_LINES);
 	glVertex3f(0, 0, 0);
 	glVertex3f(scale, 0, 0);
 	glEnd();
 
-	glColor3f(0, 1, 0);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, GREEN);
+	//glColor3f(0, 1, 0);
 	glBegin(GL_LINES);
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, scale, 0);
 	glEnd();
 
-	glColor3f(0, 0, 1);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, BLUE);
+	//glColor3f(0, 0, 1);
 	glBegin(GL_LINES);
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, 0, scale);
@@ -114,6 +125,7 @@ void drawAxis(const GLfloat scale)
 	glLineWidth(1);
 	glPointSize(1);
 	glPopMatrix();
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 }
 
 void drawFloor(const GLfloat width, const GLfloat height, const GLfloat depth)

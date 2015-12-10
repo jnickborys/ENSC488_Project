@@ -1,7 +1,7 @@
 
 void drawJeremy();
 
-void drawAxis(const GLfloat scale);
+void drawAxis(const GLfloat scale, const GLint enable = 1);
 
 void drawFloor(const GLfloat width, const GLfloat height, const GLfloat depth);
 void drawPyramid(GLint show_skeleton);

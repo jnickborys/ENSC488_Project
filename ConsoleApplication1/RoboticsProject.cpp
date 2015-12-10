@@ -38,6 +38,7 @@ GLfloat forwardKinParam[][4] = { { theta1, 0, alpha1, 0 },
 							};
 
 GLfloat inverseKinParam[3] = { 0, 0, 0 };
+GLint ENABLE_AXIS = 0;
 
 // GLUT Specifics
 void idle(void)
@@ -79,7 +80,7 @@ int _tmain(int argc, char argv[])
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-
+	glEnable(GL_NORMALIZE);
 	glutMainLoop();
 
 	return 0;

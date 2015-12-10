@@ -20,3 +20,7 @@ extern GLfloat forwardKinParam[][4];
 	Reverse Kinematic Paramters
 */
 extern GLfloat inverseKinParam[3];
+
+
+// Enables drawing of axis
+extern GLint ENABLE_AXIS;

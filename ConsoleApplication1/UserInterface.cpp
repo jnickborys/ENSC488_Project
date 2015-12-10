@@ -1,11 +1,12 @@
 #include "stdafx.h"
 
-#include "UserInterface.h"
-
 #include <gl\glui.h>
 #include <gl\glut.h>
 #include <gl\GLU.h>
 #include <gl\GL.h>
+
+#include "UserInterface.h"
+#include "stateInformation.h"
 
 void panelHandler(GLint id)
 {
@@ -55,5 +56,5 @@ void initGUI (const int main_window, float DHParam[][4], float invKinParam[3]) {
 	zpos = menu->add_spinner_to_panel(panel2, "Arm 2 [-150, -10] ", GLUI_EDITTEXT_FLOAT, &invKinParam[2], 2, panelHandler);
 
 	//menu2->add_checkbox("Show Skeleton", &show_skeleton);
-	//menu2->add_checkbox("Show Point Axis", &enable_vertice_axis);
+	menu->add_checkbox("Show Axis", &ENABLE_AXIS);
 }
