@@ -24,3 +24,12 @@ extern GLfloat inverseKinParam[3];
 
 // Enables drawing of axis
 extern GLint ENABLE_AXIS;
+extern GLint ENABLE_INV_KIN;
+
+// Force on the External Link
+extern GLfloat staticForce[3];
+
+// Static Torque Variables
+extern GLfloat torque1;
+extern GLfloat torque2;
+extern GLfloat torque3;

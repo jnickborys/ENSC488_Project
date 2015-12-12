@@ -59,14 +59,15 @@ void drawNewArm(const float jointParam[][4])
 	float lenght3=d3-radius ;
 
 	drawAxis(1.0, ENABLE_AXIS);// draw at the origin
+	glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, ELNAZ_COLOUR);
+		glColor3f(1, 0.5, 0.5);
+		glScalef(radius, radius, radius);
+		glutSolidSphere(3, 50, 50);
+	glPopMatrix();
+
 
 	frame2frame(jointParam[0],0,0);
-	glPushMatrix();
-	glTranslatef(0,0,lenght1/2.0);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, ELNAZ_COLOUR);
-		glScalef(radius,radius,lenght1);
-		glutSolidCube(1);
-	glPopMatrix ();
 	drawAxis(1.0, ENABLE_AXIS);
 
 	frame2frame(jointParam[1],0,0);
@@ -78,12 +79,12 @@ void drawNewArm(const float jointParam[][4])
 	glPopMatrix();
 
 	glPushMatrix();
+		glTranslatef(0, 0, -lenght1 / 2.0);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, ELNAZ_COLOUR);
-		glTranslatef(0,0,radius+lenght2/2.0);
-		glColor3f(0.5,1,0.5);
-		glScalef(radius,radius,lenght2);
+		glScalef(radius, radius, lenght1);
 		glutSolidCube(1);
-	glPopMatrix ();
+	glPopMatrix();
+
 	drawAxis(1.0, ENABLE_AXIS);
 
 	frame2frame(jointParam[2],0,0);
@@ -93,6 +94,15 @@ void drawNewArm(const float jointParam[][4])
 		glutSolidSphere (1,50,50); 
 	glPopMatrix();
 	drawAxis(1.0, ENABLE_AXIS);
+
+	glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, ELNAZ_COLOUR);
+		glTranslatef(0, 0, -radius - lenght2 / 2.0);
+		glColor3f(0.5, 1, 0.5);
+		glScalef(radius, radius, lenght2);
+		glutSolidCube(1);
+	glPopMatrix();
+
 
 	frame2frame(jointParam[3],0,0);
 	glPushMatrix();

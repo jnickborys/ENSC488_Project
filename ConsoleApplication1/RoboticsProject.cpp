@@ -19,8 +19,8 @@ const char* APPLICATION_NAME = "ENSC 488 Robot";
 int main_window;
 
 int alpha1 = 0;
-int alpha2 = 0;
-int alpha3 = 0;
+int alpha2 = 45;
+int alpha3 = 45;
 int alpha4 = 0;
 int theta1 = 0;
 int d1 = 1;
@@ -28,7 +28,8 @@ int d2 = 1;
 int d3 = 1;
 int d4 = 1;
 
-GLfloat forwardKinParam[][4] = { { theta1, 0, alpha1, 0 },
+GLfloat forwardKinParam[][4] = { 
+							{ theta1, 0, alpha1, 0 },
 							{ 0, 0, alpha2, d1 },
 							{ 0, 0, alpha3, d2 },
 							{ 0, 0, alpha4, d3 },
@@ -39,6 +40,13 @@ GLfloat forwardKinParam[][4] = { { theta1, 0, alpha1, 0 },
 
 GLfloat inverseKinParam[3] = { 0, 0, 0 };
 GLint ENABLE_AXIS = 0;
+GLint ENABLE_INV_KIN = 0;
+
+GLfloat staticForce[] = { 0 };
+GLfloat torque1 = 0;
+GLfloat torque2 = 0;
+GLfloat torque3 = 0;
+
 
 // GLUT Specifics
 void idle(void)

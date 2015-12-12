@@ -14,6 +14,8 @@ void mouseEventHandler(int button, int state, int x, int y);
 void getSeparationVector(const GLfloat v1[], const GLfloat v2[], GLfloat r[]);
 void drawCamera(const GLfloat eye[], const GLfloat focus[], const GLfloat rotc[], const GLint draw_rot);
 
+void test_static_balance_torque(GLfloat f2[]);
+
 /*
 Draws a position using a delta_frame which is a difference between two reference frames A and B.
 

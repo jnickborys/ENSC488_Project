@@ -8,3 +8,6 @@ const GLfloat GREEN[] = { 0, 1.0, 0 };
 const GLfloat BLUE[] = { 0, 0, 1.0 };
 
 const GLfloat ELNAZ_COLOUR[] = { 0.7, 0.7, 0.7 };
+
+const GLfloat PI = 3.1415926536;
+const GLfloat DEGREES_TO_RAD = PI / 180;
