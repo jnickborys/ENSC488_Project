@@ -13,3 +13,7 @@
 #include <gl\GL.h>
 
 #include "utils_488.h"
+#include "UserInterface.h"
+#include "jim.h"
+#include "elnaz.h"
+#include "drawFunctions.h"
