@@ -48,9 +48,9 @@ void drawElnaz(const float jointParam[][4])
 void drawNewArm(const float jointParam[][4])
 {
 //glPushMatrix();
-	float d1=1; // 1 meter
-	float d2=1;
-	float d3=1;
+	float d1 = forwardKinParam[1][3]; // 1 meter
+	float d2 = forwardKinParam[2][3];
+	float d3 = forwardKinParam[3][3];
 	float d4=1;
 
 	GLfloat radius = 0.05; // in centimeters
@@ -65,7 +65,6 @@ void drawNewArm(const float jointParam[][4])
 		glScalef(radius, radius, radius);
 		glutSolidSphere(3, 50, 50);
 	glPopMatrix();
-
 
 	frame2frame(jointParam[0],0,0);
 	drawAxis(1.0, ENABLE_AXIS);
@@ -102,7 +101,6 @@ void drawNewArm(const float jointParam[][4])
 		glScalef(radius, radius, lenght2);
 		glutSolidCube(1);
 	glPopMatrix();
-
 
 	frame2frame(jointParam[3],0,0);
 	glPushMatrix();

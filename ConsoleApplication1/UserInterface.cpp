@@ -55,9 +55,9 @@ void initGUI (const int main_window, float DHParam[][4], float invKinParam[3]) {
 	box1->set_alignment(GLUI_ALIGN_RIGHT);
 	box1->set_float_limits(25, 155);
 	box2->set_alignment(GLUI_ALIGN_RIGHT);
-	box2->set_float_limits(0, 90);
+	box2->set_float_limits(0, 50);
 	box3->set_alignment(GLUI_ALIGN_RIGHT);
-	box3->set_float_limits(-150, -10);
+	box3->set_float_limits(0, 85);
 	box4->set_alignment(GLUI_ALIGN_RIGHT);
 	box4->set_float_limits(45, 315);
 	box5->set_alignment(GLUI_ALIGN_RIGHT);
@@ -78,6 +78,8 @@ void initGUI (const int main_window, float DHParam[][4], float invKinParam[3]) {
 
 	menu->add_checkbox("Use Inverse Kinemematics", &ENABLE_INV_KIN);
 	menu->add_checkbox("Show Axis", &ENABLE_AXIS);
+	menu->add_checkbox("Enable Movement", &ENABLE_MOVEMENT);
+
 }
 
 void computeStaticBalanceTorque()
@@ -107,7 +109,7 @@ void computeStaticBalanceTorque()
 	//tor2->set_float_val(fy*l3 + c3*fy*l2 + fx*l2*s3);
 	//tor3->set_float_val(fy*l3);
 
-	std::cout << "Before Sync Live\n";
-	//menu->sync_live();
-	std::cout << "After Sync Live\n";
+	//std::cout << "Before Sync Live\n";
+	////menu->sync_live();
+	//std::cout << "After Sync Live\n";
 }

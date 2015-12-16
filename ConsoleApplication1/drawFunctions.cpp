@@ -7,6 +7,7 @@
 
 #include "utils_488.h"
 #include "drawFunctions.h"
+#include "stateInformation.h"
 #include "global_constants.h"
 
 #define PI 3.1415926535
@@ -46,13 +47,13 @@ void drawJeremy()
 	enum { FrontAxle, FLWheel, FRWheel, BackAxle, BLWheel, BRWheel };
 	glPushMatrix(); // origin center of the robot
 		// Move to the front Axle
-		frame2frame(jeremyLP[FrontAxle], 1, 0);
+		frame2frame(jeremyLP[FrontAxle], ENABLE_AXIS, 0);
 		glPushMatrix();
-			frame2frame(jeremyLP[FLWheel], 1, 0);
+			frame2frame(jeremyLP[FLWheel], ENABLE_AXIS, 0);
 			drawWheel();
 		glPopMatrix();
 		glPushMatrix();
-			frame2frame(jeremyLP[FRWheel], 1, 0);
+			frame2frame(jeremyLP[FRWheel], ENABLE_AXIS, 0);
 			glRotatef(180, 0, 1, 0);
 			drawWheel();
 		glPopMatrix();
@@ -60,13 +61,13 @@ void drawJeremy()
 
 	glPushMatrix(); // origin center of the robot
 		// Move to the front Axle
-		frame2frame(jeremyLP[BackAxle], 1, 0);
+		frame2frame(jeremyLP[BackAxle], ENABLE_AXIS, 0);
 		glPushMatrix();
-			frame2frame(jeremyLP[BLWheel], 1, 0);
+			frame2frame(jeremyLP[BLWheel], ENABLE_AXIS, 0);
 			drawWheel();
 		glPopMatrix();
 		glPushMatrix();
-			frame2frame(jeremyLP[BRWheel], 1, 0);
+			frame2frame(jeremyLP[BRWheel], ENABLE_AXIS, 0);
 			glRotatef(180, 0, 1, 0);
 			drawWheel();
 		glPopMatrix();
@@ -128,18 +129,39 @@ void drawAxis(const GLfloat scale, const GLint enable)
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 }
 
+void drawFloorplan(const GLfloat width, const GLfloat height, const GLfloat depth)
+{
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, LIGHT_GRAY);
+	glPushMatrix();
+		drawFloor(width, height, depth);
+		glPushMatrix();
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, OFF_WHITE);
+			glTranslatef(-1 * FT_TO_M, 0, -2.5 * FT_TO_M);
+			glScalef(2 * FT_TO_M, 3*FT_TO_M, 5 * FT_TO_M);
+			glutSolidCube(1);
+		glPopMatrix(); // back to origin
+
+		glPushMatrix();
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, TABLE);
+			glTranslatef(3 * FT_TO_M, 0, -.5 * FT_TO_M);
+			glRotatef(90, 1, 0, 0);
+			glScalef(1.5 * FT_TO_M, 1.5 * FT_TO_M, 1.5 * FT_TO_M);
+			
+			drawTable();
+
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
 void drawFloor(const GLfloat width, const GLfloat height, const GLfloat depth)
 {
 	const static GLfloat thickness = 1.0 / 100.0; // 1 cm to meters 
+	glNormal3d(0, 1, 0);
 
-	// Set the colour to grey
 	glColor3f(0.2, 0.2, 0.2);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, FLOOR);
 
-	//glPushMatrix();
-	//glTranslatef(0, depth, 0);
-	//glScalef(width, thickness, height);
-	//glutSolidCube(1);
-	//glPopMatrix();
 	GLfloat p1[] = { -width / 2, depth, -height / 2 };
 	GLfloat p2[] = { -width / 2, depth, height / 2 };
 	GLfloat p3[] = { width / 2, depth, height / 2 };
@@ -226,6 +248,29 @@ void drawCircle(const GLfloat radius, const int num_segments)
 	}
 	glEnd();
 }
+
+void drawTable()
+{
+	glPushMatrix();
+		GLUquadric* wheel;
+		wheel = gluNewQuadric();
+		gluQuadricNormals(wheel, GLU_SMOOTH);
+		glPushMatrix();
+			gluCylinder(wheel, 1, 1, 1, 24, 24);
+			glRotatef(270, 1, 0, 0);
+			drawCircle(1, 24);
+		glPopMatrix();
+
+		glPushMatrix();
+			glTranslatef(0, 0, 1);
+			glRotatef(90, 1, 0, 0);
+			drawCircle(1, 24);
+		glPopMatrix();
+	glPopMatrix();
+
+	return;
+}
+
 
 void drawWheel()
 {

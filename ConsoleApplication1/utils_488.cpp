@@ -157,6 +157,93 @@ float getTheta()
 	return theta/DEGREES_TO_RAD;
 }
 
+void computeTrajectory(GLfloat theta0, GLfloat thetav, GLfloat thetag, GLint dur)
+{
+	GLfloat tfs = dur / 1000.0;
+
+	t0 = glutGet(GLUT_ELAPSED_TIME);
+	tf = t0 + dur * 2;
+	thalf = (tf - t0) / 2;
+
+	a_[0] = theta0;
+	a_[1] = 0;
+	a_[2] = (12 * thetav - 3 * thetag - 9 * theta0) / (4 * tfs * tfs);
+	a_[3] = (-8 * thetav + 3 * thetag + 5 * theta0) / (4 * tfs * tfs * tfs);
+
+	a_[4] = thetav;
+	a_[5] = (3 * thetag - 3 * theta0) / (4 * tfs);
+	a_[6] = (-12 * thetav + 6 * thetag + 6 * theta0) / (4 * tfs * tfs);
+	a_[7] = (8 * thetav - 5 * thetag - 3 * theta0) / (4 * tfs * tfs * tfs);
+
+}
+
+GLfloat computeDirection()
+{
+	GLint t = glutGet(GLUT_ELAPSED_TIME) - t0;
+	GLfloat ts = t/1000.0;
+
+	if (t > tf - t0) {
+		return robotFacing;
+	} 
+	else if (t > thalf - t0) {
+		ts = ts - (thalf / 1000.0);
+		return a_[4] + a_[5] * ts + a_[6] * pow(ts, 2) + a_[7] * pow(ts, 3);
+	}
+	else {
+		return a_[0] + a_[1] * ts + a_[2] * pow(ts, 2) + a_[3] * pow(ts, 3);
+	}
+}
+
+void Compute_delp()
+{
+	GLint cur_time = 0;
+	GLint delt = 0;
+	static GLint offset = 0;
+
+	if (prev_time == 0.0) {
+		prev_time = glutGet(GLUT_ELAPSED_TIME);
+		offset = prev_time;
+	}
+
+	cur_time = glutGet(GLUT_ELAPSED_TIME);
+	
+	delt = cur_time - prev_time;
+
+	if ((prev_time > 5000 + offset) && state == 1 ) {
+		computeTrajectory(90, 45, 0, 1000);
+		state += 1;
+	} else if ((prev_time > 13000 + offset) && state == 2) {
+		computeTrajectory(0, -45, -90, 1000);
+		state += 1;
+	} else if ((prev_time > 19000 + offset) && state == 3) {
+		computeTrajectory(-90, -135, -180, 1000);
+		state += 1;
+	} else if ((prev_time > 23000 + offset) && state == 4) {
+		computeTrajectory(-180, -225, -270, 1000);
+		state += 1;
+	} else if ((prev_time > 28000 + offset) && state == 5) {
+		computeTrajectory(-270, -225, -180, 1000);
+		state += 1;
+	} else if ((prev_time > 33000 + offset) && state == 6) {
+		computeTrajectory(-180, -135, -90, 1000);
+		state += 1;
+	} else if ((prev_time > 38000 + offset) && state == 7) {
+		velocity = 0.0005;
+		computeTrajectory(-90, 0, 90, 2000);
+		state += 1;
+	}
+	else if ((prev_time > 40000 + offset) && state == 8) {
+		velocity = 0;
+	}
+
+	robotFacing = computeDirection();
+
+	robotPosition[0] = robotPosition[0] + (velocity * cos(robotFacing*DEGREES_TO_RAD) * delt);
+	robotPosition[2] = robotPosition[2] + (velocity * sin(robotFacing*DEGREES_TO_RAD) * delt);
+
+	prev_time = cur_time;
+}
+
 void renderScene(void)
 {
 
@@ -170,7 +257,19 @@ void renderScene(void)
 	// with respect to the identity matrix. Might be a good idea to push
 	// this matrix onto the stack
 
-	camera.Update();
+	//camera.Update();
+	camera.FollowRobot();
+
+	glPushMatrix();
+	glScalef(FT_TO_M, FT_TO_M, FT_TO_M);
+	// move the robot Position
+
+	if (ENABLE_MOVEMENT) {
+		Compute_delp();
+	}
+
+	glTranslatef(robotPosition[0], robotPosition[1], robotPosition[2]);
+	glRotatef(robotFacing, 0, -1, 0);
 
 	if (ENABLE_INV_KIN){
 		forwardKinParam[0][0] = getTheta() + 180;
@@ -181,29 +280,11 @@ void renderScene(void)
 	// break out our code this way all changes can be done in the specific 
 	// draw functions
 	
+	glTranslatef(0, -0.35, 0);
+
 	drawJeremy();
 	
 	glRotatef(-90, 1, 0, 0);
-
-	glPushMatrix();
-	glTranslatef(1, 1, 1);
-	glutSolidSphere(.1, 12, 12);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(1, 1, 0);
-	glutSolidSphere(.1, 12, 12);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(1, 0, 1);
-	glutSolidSphere(.1, 12, 12);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-1, 1, 1);
-	glutSolidSphere(.1, 12, 12);
-	glPopMatrix();
 
 	glPushMatrix();
 		drawElnaz(forwardKinParam);
@@ -212,9 +293,14 @@ void renderScene(void)
 		glScalef(0.1, 0.1, 0.1);
 		drawJim(WristLinkParams);
 	glPopMatrix();
-	////drawFloor(100, 100, -1);
 
 	computeStaticBalanceTorque();
+
+	glRotatef(90, 1, 0, 0);
+
+	glPopMatrix();
+
+	drawFloorplan(12 * FT_TO_M, 10 * FT_TO_M, -1.5 * FT_TO_M);
 
 	glutSwapBuffers();
 	return;
@@ -253,6 +339,8 @@ void keyBoardEventHandler(unsigned char key, int x, int y)
 	const static float backward[] = { -1, 0, 0 };
 	const static float left[] = { 0, 0, -1 };
 	const static float right[] = { 0, 0, 1 };
+	const static float up[] = { 0, 1, 0 };
+	const static float down[] = { 0, -1, 0 };
 
 	switch (key) {
 	case 'w':
@@ -267,13 +355,18 @@ void keyBoardEventHandler(unsigned char key, int x, int y)
 	case 'd':
 		camera.Move(right);
 		break;
+	case 'r':
+		camera.Move(up);
+		break;
+	case 'f':
+		camera.Move(down);
+		break;
 	case 'o':
 		WristLinkParams[1][2] += 10;
 		break;
 	case 'p':
 		WristLinkParams[1][2] -= 10;
 		break;
-
 	case 'k':
 		WristLinkParams[2][3] += 0.2;
 		WristLinkParams[3][3] -= 0.2;
