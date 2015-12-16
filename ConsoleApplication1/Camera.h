@@ -14,6 +14,8 @@ public:
 	/* Changes the focus of the camera */
 	void Rotate(const float _rot[]);
 
+	void FollowRobot();
+
 private:
 	float *_eye, *_focus, *_up;
 };

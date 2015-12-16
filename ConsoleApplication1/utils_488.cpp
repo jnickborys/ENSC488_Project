@@ -8,10 +8,14 @@
 #include <gl\GLU.h>
 #include <gl\GL.h>
 
+#include "global_constants.h"
+#include "UserInterface.h"
+#include "stateInformation.h"
 #include "drawFunctions.h"
 #include "elnaz.h"
 #include "jim.h"
 #include "Camera.h"
+#include "utils_488.h"
 
 void drawCamera(const GLfloat eye[], const GLfloat focus[], const GLfloat rotc[], const GLint draw_rot);
 
@@ -22,22 +26,6 @@ GLfloat WristLinkParams[][4] = { { 0,1,0,0 },
 								{ 0,1,0,0 },
 								{ 0,0,0,DistFromOrigin },
 								{ 0,0,0,-DistFromOrigin } };
-
-	int alpha1=0;
-	int alpha2=0;
-	int alpha3=0;
-	int alpha4=0;
-	int theta1=0;
-	int d1=1;
-	int d2=1;
-	int d3=1;
-	int d4=1;
-
-GLfloat jointParam[][4]={{theta1,0,alpha1,0}, 
-							 {0,0,alpha2,d1},
-							 {0,0,alpha3,d2},
-							 {0,0,alpha4,d3}};
-
 
 //GLfloat _Oldeye[] = { 10, 10, 10};
 //GLfloat _Oldfocus[] = { 0, 10, 0 };
@@ -60,8 +48,206 @@ void mouseEventHandler(int button, int state, int x, int y)
 	return;
 }
 
+float computeTheta23(const float K, const float theta1, const float theta3)
+{
+	float a3 = forwardKinParam[1][3];
+	float a2 = forwardKinParam[2][3];
+
+	float d4 = forwardKinParam[3][1];
+
+	float s1 = sin(theta1);
+	float c1 = cos(theta1);
+	float s3 = sin(theta3);
+	float c3 = cos(theta3);
+	float px = inverseKinParam[0];
+	float py = inverseKinParam[1];
+	float pz = inverseKinParam[2];
+	float theta23 = 0;
+
+	float temp1 = (-a3 - a2*c3) * pz - (c1 * px + s1*py)*(d4 - a2*s3);
+	float temp2 = (a2*s3 - d4) * pz - (a3 + a2*c3)*(c1*px + s1*py);
+	theta23 = atan2f(temp1, temp2);
+	return theta23;
+}
+
+void ComputeInvKin()
+{
+	float currentFrame[16] = { 0 };
+	float d4 = 0;
+	float d3 = 0;
+	float theta1a = 0;
+	float theta1b = 0;
+
+	float theta2[4] = { 0 };
+	float theta3a = 0;
+	float theta3b = 0;
+
+	float theta23[4] = { 0 };
+	enum {aa, ba, ab, bb};
+
+	float px, py, pz;
+
+	float a2 = 1;
+	float a3 = 1;
+
+	float K = 0;
+
+	//D_val = linkFrameParam[link][3];
+	d3 = 0;
+
+	px = inverseKinParam[0];
+	py = inverseKinParam[1];
+	pz = inverseKinParam[2];
+
+	float rho_p = sqrtf(px*px + py*py - d3*d3);
+	float rho_n = -sqrtf(px*px + py*py - d3*d3);
+	
+	float phi = atan2f(py, px);
+
+	float theta_v1 = atan2f(d3, rho_p);
+	float theta_v2 = atan2f(d3, rho_n);
+
+	theta1a = (phi - theta_v1) * 1 / DEGREES_TO_RAD;
+	theta1b = (phi - theta_v2) * 1 / DEGREES_TO_RAD;
+
+	float temp1 = sqrt(a3*a3 + d4*d4 - K*K);
+	float temp2 = -sqrt(a3*a3 + d4*d4 - K*K);
+
+	K = (px*px + py*py + pz*pz - a2*a3 - a3*a3 - d3*d3 - d4*d4) / (2*a2);
+
+	theta3a = atan2f(a3, d4) - atan2f(K, temp1);
+	theta3b = atan2f(a3, d4) - atan2f(K, temp2);
+	
+	theta23[aa] = computeTheta23(K, theta1a, theta3a);
+	theta23[ba] = computeTheta23(K, theta1b, theta3a);
+	theta23[ab] = computeTheta23(K, theta1a, theta3b);
+	theta23[bb] = computeTheta23(K, theta1b, theta3b);
+	
+	theta2[aa] = (theta23[aa] - theta3a) * 1 / DEGREES_TO_RAD;
+	theta2[ba] = (theta23[ba] - theta3a) * 1 / DEGREES_TO_RAD;
+	theta2[ab] = (theta23[ab] - theta3a) * 1 / DEGREES_TO_RAD;
+	theta2[bb] = (theta23[bb] - theta3a) * 1 / DEGREES_TO_RAD;
+
+	theta3a = theta3a * 1 / DEGREES_TO_RAD;
+	theta3b = theta3b * 1 / DEGREES_TO_RAD;
+
+	forwardKinParam[1][2] = theta1a;
+	forwardKinParam[2][2] = theta2[aa];
+	forwardKinParam[3][2] = theta3a;
+
+	return;
+}
+
+float sgn(float x)
+{
+	if (x > 0) return 1;
+	if (x < 0) return -1;
+	return 0;
+}
+
+float getTheta()
+{
+	float theta = 0;
+	theta = atan2f(inverseKinParam[2], inverseKinParam[0]);
+	if (inverseKinParam[0] < 0) // Quadrants 1 and 4
+	{
+		float sign = sgn(theta);
+		theta = theta + sign * PI/2.0;
+	}
+	return theta/DEGREES_TO_RAD;
+}
+
+void computeTrajectory(GLfloat theta0, GLfloat thetav, GLfloat thetag, GLint dur)
+{
+	GLfloat tfs = dur / 1000.0;
+
+	t0 = glutGet(GLUT_ELAPSED_TIME);
+	tf = t0 + dur * 2;
+	thalf = (tf - t0) / 2;
+
+	a_[0] = theta0;
+	a_[1] = 0;
+	a_[2] = (12 * thetav - 3 * thetag - 9 * theta0) / (4 * tfs * tfs);
+	a_[3] = (-8 * thetav + 3 * thetag + 5 * theta0) / (4 * tfs * tfs * tfs);
+
+	a_[4] = thetav;
+	a_[5] = (3 * thetag - 3 * theta0) / (4 * tfs);
+	a_[6] = (-12 * thetav + 6 * thetag + 6 * theta0) / (4 * tfs * tfs);
+	a_[7] = (8 * thetav - 5 * thetag - 3 * theta0) / (4 * tfs * tfs * tfs);
+
+}
+
+GLfloat computeDirection()
+{
+	GLint t = glutGet(GLUT_ELAPSED_TIME) - t0;
+	GLfloat ts = t/1000.0;
+
+	if (t > tf - t0) {
+		return robotFacing;
+	} 
+	else if (t > thalf - t0) {
+		ts = ts - (thalf / 1000.0);
+		return a_[4] + a_[5] * ts + a_[6] * pow(ts, 2) + a_[7] * pow(ts, 3);
+	}
+	else {
+		return a_[0] + a_[1] * ts + a_[2] * pow(ts, 2) + a_[3] * pow(ts, 3);
+	}
+}
+
+void Compute_delp()
+{
+	GLint cur_time = 0;
+	GLint delt = 0;
+	static GLint offset = 0;
+
+	if (prev_time == 0.0) {
+		prev_time = glutGet(GLUT_ELAPSED_TIME);
+		offset = prev_time;
+	}
+
+	cur_time = glutGet(GLUT_ELAPSED_TIME);
+	
+	delt = cur_time - prev_time;
+
+	if ((prev_time > 5000 + offset) && state == 1 ) {
+		computeTrajectory(90, 45, 0, 1000);
+		state += 1;
+	} else if ((prev_time > 13000 + offset) && state == 2) {
+		computeTrajectory(0, -45, -90, 1000);
+		state += 1;
+	} else if ((prev_time > 19000 + offset) && state == 3) {
+		computeTrajectory(-90, -135, -180, 1000);
+		state += 1;
+	} else if ((prev_time > 23000 + offset) && state == 4) {
+		computeTrajectory(-180, -225, -270, 1000);
+		state += 1;
+	} else if ((prev_time > 28000 + offset) && state == 5) {
+		computeTrajectory(-270, -225, -180, 1000);
+		state += 1;
+	} else if ((prev_time > 33000 + offset) && state == 6) {
+		computeTrajectory(-180, -135, -90, 1000);
+		state += 1;
+	} else if ((prev_time > 38000 + offset) && state == 7) {
+		velocity = 0.0005;
+		computeTrajectory(-90, 0, 90, 2000);
+		state += 1;
+	}
+	else if ((prev_time > 40000 + offset) && state == 8) {
+		velocity = 0;
+	}
+
+	robotFacing = computeDirection();
+
+	robotPosition[0] = robotPosition[0] + (velocity * cos(robotFacing*DEGREES_TO_RAD) * delt);
+	robotPosition[2] = robotPosition[2] + (velocity * sin(robotFacing*DEGREES_TO_RAD) * delt);
+
+	prev_time = cur_time;
+}
+
 void renderScene(void)
 {
+	GLfloat wristScale = 0.05;
+
 	glDepthMask(GL_TRUE);
 	glClearColor(0.4f, 0.4f, 0.95, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -72,25 +258,77 @@ void renderScene(void)
 	// with respect to the identity matrix. Might be a good idea to push
 	// this matrix onto the stack
 
-	camera.Update();
+	if (ENABLE_CAMERA_FOLLOW)
+		camera.FollowRobot();
+	else
+		camera.Update();
+	
+	glPushMatrix();
+	glScalef(FT_TO_M, FT_TO_M, FT_TO_M);
+	// move the robot Position
 
+	if (ENABLE_MOVEMENT) {
+		Compute_delp();
+	}
+
+	glTranslatef(robotPosition[0], robotPosition[1], robotPosition[2]);
+	glRotatef(robotFacing, 0, -1, 0);
+
+	if (ENABLE_INV_KIN){
+		forwardKinParam[0][0] = getTheta() + 180;
+		//ComputeInvKin();
+	}
 
 	// To make the Code more separated I am including some functions to 
 	// break out our code this way all changes can be done in the specific 
 	// draw functions
-
-	drawElnaz(jointParam);
-
-	//drawJeremy();
 	
-	//drawJim(WristLinkParams);
+	glTranslatef(0, -0.35, 0);
 
-	//drawFloor(100, 100, -1);
+	drawJeremy();
+	
+	glRotatef(-90, 1, 0, 0);
+
+	glPushMatrix();
+		drawElnaz(forwardKinParam);
+
+		glRotatef(-90, 0, 1, 0);
+		glScalef(wristScale, wristScale, wristScale);
+		drawJim(WristLinkParams);
+	glPopMatrix();
+
+	computeStaticBalanceTorque();
+
+	glRotatef(90, 1, 0, 0);
+
+	glPopMatrix();
+
+	drawFloorplan(12 * FT_TO_M, 10 * FT_TO_M, -1.5 * FT_TO_M);
 
 	glutSwapBuffers();
 	return;
 }
 
+void test_static_balance_torque(GLfloat f2[])
+{
+	GLfloat p1[] = { 0, 0, 0, 0 };
+	GLfloat p2[] = { 0, 0, 0, 0 };
+	GLfloat p3[] = { 0, 0, 0, 0 };
+
+	GLfloat t1 = 0;
+	GLfloat t2 = 0;
+
+	GLfloat theta2 = 45;
+	GLfloat l1 = 1;
+	GLfloat l2 = 1;
+
+	GLfloat s2 = sin(theta2 * DEGREES_TO_RAD);
+	GLfloat c2 = cos(theta2 * DEGREES_TO_RAD);
+
+	t1 = (l1 * s2 * f2[0]) + f2[1]*(l2 + l1*c2);
+	t2 = l2 * f2[1];
+
+}
 
 void keyBoardEventHandler(unsigned char key, int x, int y)
 {
@@ -104,6 +342,8 @@ void keyBoardEventHandler(unsigned char key, int x, int y)
 	const static float backward[] = { -1, 0, 0 };
 	const static float left[] = { 0, 0, -1 };
 	const static float right[] = { 0, 0, 1 };
+	const static float up[] = { 0, 1, 0 };
+	const static float down[] = { 0, -1, 0 };
 
 	switch (key) {
 	case 'w':
@@ -118,13 +358,18 @@ void keyBoardEventHandler(unsigned char key, int x, int y)
 	case 'd':
 		camera.Move(right);
 		break;
+	case 'r':
+		camera.Move(up);
+		break;
+	case 'f':
+		camera.Move(down);
+		break;
 	case 'o':
 		WristLinkParams[1][2] += 10;
 		break;
 	case 'p':
 		WristLinkParams[1][2] -= 10;
 		break;
-
 	case 'k':
 		WristLinkParams[2][3] += 0.2;
 		WristLinkParams[3][3] -= 0.2;
@@ -137,18 +382,18 @@ void keyBoardEventHandler(unsigned char key, int x, int y)
 		break;
 	case 'l':
 	
-		WristLinkParams[2][3] -= 0.1;
-		WristLinkParams[3][3] += 0.1;
+		WristLinkParams[2][3] -= 0.2;
+		WristLinkParams[3][3] += 0.2;
 		
 		//Limit the close position
-		if (WristLinkParams[2][3] <= 0.5) {
-			WristLinkParams[2][3] = 0.5;
-			WristLinkParams[3][3] = -0.5;
+		if (WristLinkParams[2][3] <= 0) {
+			WristLinkParams[2][3] = 0;
+			WristLinkParams[3][3] = 0;
 		}
-		break;
 
+		break;
 	case 'm':
-		jointParam[0][0]+=10;
+		forwardKinParam[0][0]+=10;
 		break;
 	case 27: // "27" is theEscape key
 		exit(1);
@@ -280,7 +525,7 @@ void frame2frame(const GLfloat delta_frame[], GLint enable_vertice_axis, GLint n
 	glPointSize(1);
 
 	if (enable_vertice_axis)
-		drawAxis(0.1);
+		drawAxis(0.5);
 
 	glRotatef(delta_frame[alpha], 0, 0, 1);
 
@@ -316,7 +561,7 @@ void frame2frame(const GLfloat delta_frame[], GLint enable_vertice_axis, GLint n
 	glTranslatef(0, 0, delta_frame[d]);
 	
 	if (enable_vertice_axis)
-		drawAxis(0.1);
+		drawAxis(0.5);
 
 	glPointSize(5);
 		glBegin(GL_POINTS);
@@ -327,6 +572,5 @@ void frame2frame(const GLfloat delta_frame[], GLint enable_vertice_axis, GLint n
 	if (enable_vertice_axis)
 		drawAxis(0.1);
 }
-
 
 
