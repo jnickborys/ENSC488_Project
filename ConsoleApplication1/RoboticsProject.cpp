@@ -42,6 +42,7 @@ GLfloat inverseKinParam[3] = { 0, 0, 0 };
 GLint ENABLE_AXIS = 0;
 GLint ENABLE_INV_KIN = 0;
 GLint ENABLE_MOVEMENT = 0;
+GLint ENABLE_CAMERA_FOLLOW = 0;
 
 GLfloat staticForce[] = { 0 };
 GLfloat torque1 = 0;

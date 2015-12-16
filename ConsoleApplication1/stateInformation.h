@@ -26,6 +26,7 @@ extern GLfloat inverseKinParam[3];
 extern GLint ENABLE_AXIS;
 extern GLint ENABLE_INV_KIN;
 extern GLint ENABLE_MOVEMENT;
+extern GLint ENABLE_CAMERA_FOLLOW;
 
 // Force on the External Link
 extern GLfloat staticForce[3];

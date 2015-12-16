@@ -257,9 +257,11 @@ void renderScene(void)
 	// with respect to the identity matrix. Might be a good idea to push
 	// this matrix onto the stack
 
-	//camera.Update();
-	camera.FollowRobot();
-
+	if (ENABLE_CAMERA_FOLLOW)
+		camera.FollowRobot();
+	else
+		camera.Update();
+	
 	glPushMatrix();
 	glScalef(FT_TO_M, FT_TO_M, FT_TO_M);
 	// move the robot Position

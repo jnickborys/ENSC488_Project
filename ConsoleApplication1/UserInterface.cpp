@@ -78,7 +78,8 @@ void initGUI (const int main_window, float DHParam[][4], float invKinParam[3]) {
 
 	menu->add_checkbox("Use Inverse Kinemematics", &ENABLE_INV_KIN);
 	menu->add_checkbox("Show Axis", &ENABLE_AXIS);
-	menu->add_checkbox("Enable Movement", &ENABLE_MOVEMENT);
+	menu->add_checkbox("Enable Robot Movement", &ENABLE_MOVEMENT);
+	menu->add_checkbox("Enable Camera Follow", &ENABLE_CAMERA_FOLLOW);
 
 }
 
